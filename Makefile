@@ -6,3 +6,6 @@ lint-fix:
 
 lint:
 	npx eslint -f unix ./
+
+deploy:
+	node ./discord/deploy-commands.js

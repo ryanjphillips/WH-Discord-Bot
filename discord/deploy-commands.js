@@ -1,27 +1,29 @@
 import { REST, Routes } from 'discord.js';
 import discordConfig from './config.json' assert {type: 'json'};
-import fs from 'node:fs';
+import ping from './commands/ping.js';
+import user from './commands/user.js';
+import server from './commands/server.js';
+import playlist from './commands/playlist.js';
 
 const commands = [];
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = [ping(), user(), server(), playlist()];
 
 for (const file of commandFiles) {
-	const command = import(`./commands/${file}`);
+	const command = file;
 	commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: '10' }).setToken(discordConfig.token);
+ const rest = new REST({ version: '10' }).setToken(discordConfig.token);
 
 (async () => {
 	try {
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 		const data = await rest.put(
+			Routes.applicationGuildCommands(discordConfig.clientId, discordConfig.guildId),
 			{ body: commands },
 		);
-
 		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 	} catch (error) {
 		console.error(error);
 	}
 })();
-

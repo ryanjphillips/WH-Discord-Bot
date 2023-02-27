@@ -1,13 +1,14 @@
-import SlashCommandBuilder from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 
 function ping() {
   return {
     data: new SlashCommandBuilder()
-      .setName('user')
+      .setName('ping')
       .setDescription('Provides information about the user.'),
-    async exectute(interaction) {
+    async execute(interaction) {
       await interaction.reply(`This command was run by ${interaction.user.username}, who joined on ${interaction.member.joinedAt}.`);
     },
+
   };
 }
 
